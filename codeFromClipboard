@@ -1,0 +1,31 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Jun 12 14:46:51 2016
+用正则表达式来提取剪切板中的windcode代码
+get windcode from clipboard
+@author: gsyuan
+"""
+import re
+import win32clipboard as wc
+import win32con
+
+from WindPy import *
+
+w.start()
+
+def getCodeFromClipboard():
+    '''
+    通过剪切板获得用户复制到剪切板上的edb代码，利用这些代码来调用接品获取数据
+    '''
+    
+    wc.OpenClipboard()
+    d = wc.GetClipboardData(win32con.CF_TEXT)
+    wc.CloseClipboard()
+    codes=re.findall('[SM]+\d{7}',str(d))
+    return codes
+
+codes=getCodeFromClipboard()
+print('您剪切板中的edb代码为：')
+print(codes)
+    
+    
