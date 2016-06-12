@@ -16,6 +16,7 @@ import numpy as np
 import datetime,time
 import win32clipboard as wc
 import win32con
+import re
  
 from WindPy import *
 from pandas import Series,DataFrame
@@ -56,7 +57,7 @@ def getCodeFromClipboard():
 wc.OpenClipboard()
     d = wc.GetClipboardData(win32con.CF_TEXT)
     wc.CloseClipboard()
-    codes=d.strip().split('\t')
+    codes=re.findall('[SM]+\d{7}',str(d))
     return codes
  
  
