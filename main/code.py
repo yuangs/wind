@@ -14,10 +14,6 @@ csv文件；
 
 """
 
-import pandas as pd
-import numpy as np
-import datetime
-import time
 import re
 
 #import win32clipboard as wc
@@ -111,6 +107,11 @@ def getActivecodes():
 if __name__ == '__main__':
 
     """
-    测试持仓数据
+    功能测试
     """
-    print(future_info())
+    print(oneCode())
+#    print(windCode())
+    print(getCodeFromClipboard())
+    print(getCodes())
+    print(getWindCodes())
+    print(getActivecodes())
