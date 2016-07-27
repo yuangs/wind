@@ -1,0 +1,62 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Jul 27 14:46:00 2016
+
+@author: gsyuan
+"""
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from WindPy import *
+
+w.start()  #
+#计算所有品种的投机度
+def hot():
+  date='20160726'
+  #获取代码，成交量及持仓量的数据
+  field="A1701.DCE,AG1612.SHF,AL1609.SHF,AU1612.SHF,B1705.DCE,BB1705.DCE,BU1609.SHF,C1701.DCE,CF701.CZC,CS1701.DCE,CU1609.SHF,FB1705.DCE,FG609.CZC,FU1704.SHF,HC1610.SHF,I1609.DCE,IC1608.CFE,IF1608.CFE,IH1608.CFE,J1609.DCE,JD1609.DCE,JM1609.DCE,JR705.CZC,L1701.DCE,LR705.CZC,M1701.DCE,MA609.CZC,NI1609.SHF,OI701.CZC,P1701.DCE,PB1609.SHF,PM611.CZC,PP1609.DCE,RB1610.SHF,RI705.CZC,RM609.CZC,RS609.CZC,RU1609.SHF,SF706.CZC,SM705.CZC,SN1609.SHF,SR701.CZC,T1609.CFE,TA609.CZC,TF1609.CFE,V1609.DCE,WH701.CZC,WR1705.SHF,Y1701.DCE,ZC609.CZC,ZN1609.SHF"
+  index="oi,volume"
+  date="tradeDate=%s;cycle=D" % date
+  codes=oi=w.wss(field,index,date).Codes
+  oi=w.wss(field,index,date).Data[0]
+  volume=w.wss(field,index,date).Data[1]
+
+  #将列转化为numpy对象
+  oi=pd.Series(oi,index=codes)
+  volume=pd.Series(volume,index=codes)
+
+  #计算投机度
+  touji=volume/oi
+
+  #删除空值，输入图表和数据
+  hot=touji.dropna()
+  hot.columns='hot'
+  print('投机度最高的前十名为：')
+  print(hot.nlargest(10))
+  print('投机度最低的前十名为：')
+  print(hot[hot!=0].nsmallest(10))
+
+  hot[hot!=0].plot(kind='bar',figsize=(10.5, 4.3))
+
+def getchart():
+  read=pd.read_clipboard(header=0,index_col=0)
+  index=pd.to_datetime(read.index)
+  #columns=['open','high','low','close','settle','amount','volume','oi']
+  #read.columns=columns
+  read.index=index
+  read['投机度']=read.成交量/read.持仓量
+#  read['投机度'].plot()
+  sample=read.resample('3M').mean().iloc[:,[-1,-5,-4,-2]]
+  sample.plot(subplots=True, layout=(2, 2), figsize=(10, 6), sharex=False);
+
+
+hot()
+getchart()
+
+
+
+
+
+
+
+
