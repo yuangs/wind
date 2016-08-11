@@ -1,0 +1,44 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Aug 11 14:11:01 2016
+
+@author: gsyuan
+利用requests库下载各种文件,传递一个资源的地址即可；
+@author: gsyuan
+"""
+import os
+import requests
+
+url = 'http://www.dce.com.cn/portal/uploadFiles/296.1469674883750.jpg'
+
+def download(url):
+  '''
+  下载文件
+  '''
+
+  curr_dir=os.getcwd()
+  #从URL中解析出文件名与扩展名
+  lis=url.split(sep='.')
+  extend=lis[-1]
+  file_name=url[1+url.rfind('/'):url.rfind('.')]
+  file='.'.join([file_name,extend])
+  print('FILE:',file)
+  print('USE: requests')
+  print('FROM:',url)
+  print('SAVED:',curr_dir)
+
+  #下载数据
+  r = requests.get(url)
+  print('SIZE:',len(r.content))
+  with open(str(file), "wb") as f:
+       f.write(r.content)
+
+
+def test(date='0811'):
+  date=date
+  url='http://www.cffex.com.cn/fzjy/ccpm/2016%s/%s/IF_1.csv' %(date[0:2],date[-2:])
+  download(url)
+
+if __name__=='__main__':
+  download('https://github.com/yuangs/requests/archive/master.zip')
+
