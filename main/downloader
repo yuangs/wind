@@ -7,7 +7,22 @@ Created on Thu Aug 11 14:11:01 2016
 @author: gsyuan
 """
 import os
+import re
 import requests
+
+def getblog(blog_id='1619925757'):
+    
+    url_all=[]
+    for i in range(54):
+        page='http://blog.sina.com.cn/s/articlelist_%s_0_%s.html' %(blog_id,i)
+        r=requests.get(page)
+        url_page=re.findall('http://blog.sina.com.cn/s/blog_.*.html',r.content.decode('utf-8'))
+        url_all.extend(url_page)
+    print(url_all)
+    for i in url_all:
+        download(i)
+        
+
 
 url = 'http://www.dce.com.cn/portal/uploadFiles/296.1469674883750.jpg'
 curr_dir=os.getcwd()
@@ -47,8 +62,10 @@ def shfeoi():
 
 
 if __name__=='__main__':
-  for i in data:
-    download(i[:-1])
+    
+    getblog()
+    
+#    for i in url_all:
+#        download(i)
 
 #  shfeoi()
-
