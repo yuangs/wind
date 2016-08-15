@@ -1,0 +1,10 @@
+from lxml import html
+import requests
+
+page = requests.get('http://blog.sina.com.cn/s/articlelist_1154580174_0_1.html')
+page.encoding=page.encoding
+tree = html.fromstring(page.text)
+
+links = tree.xpath("//*[@id='module_928']/div[2]/div[1]/div[2]/div[1]/p[1]/span[2]/a[contains(@href,'blog')]")
+for line in links:
+    print ('title: ',line)
