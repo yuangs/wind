@@ -7,8 +7,10 @@ http://www.shfe.com.cn/data/dailydata/kx/pm20160725.dat
 @author: gsyuan
 """
 import pandas as pd
+import datetime
 
-oi=pd.DataFrame(pd.read_json('http://www.shfe.com.cn/data/dailydata/kx/pm20160725.dat'))
+today=datetime.datetime.now().strftime("%Y%m%d")
+oi=pd.DataFrame(pd.read_json('http://www.shfe.com.cn/data/dailydata/kx/pm%s.dat' %today))
 index=oi.index
 lis=[]
 for i in range(len(index)):
@@ -29,4 +31,4 @@ for i in range(len(index)):
   lis.append(raw)
 df=pd.DataFrame(lis,index=index)
 result=df.iloc[:,[0,1,6,5,4,7,3,2,8,10,9]]
-print(result)
+print('%s上海期货交易所品种持仓情况如下:\n' %today ,result)
