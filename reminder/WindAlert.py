@@ -101,8 +101,7 @@ def sendMail(message):
     smtpserver = 'shms3.wind.com.cn'
     username = 'gsyuan'
     password = '******'
-    username = 'yuanguangshan'
-    password = '******'
+
 
     msg = MIMEText(message, 'text', 'utf-8')  # 中文需参数‘utf-8’，单字节字符不需要
     msg['Subject'] = Header(subject, 'utf-8')
