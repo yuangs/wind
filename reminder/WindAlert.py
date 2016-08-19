@@ -6,7 +6,7 @@ Created on Mon Jun 27 15:31:50 2016
 """
 from WindPy import *
 from constants import cons
-from pywind.tools import getCode
+from tools import getCode
 from email.mime.text import MIMEText
 from email.header import Header
 import smtplib
