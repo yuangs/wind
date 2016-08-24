@@ -6,7 +6,7 @@ Created on Thu Aug 11 14:11:01 2016
 利用requests库下载各种文件
 @author: gsyuan
 """
-import os,sys,re
+import os,re
 import requests
 from lxml import etree
 #测试下载链接，要下载的网页链接，获取网页标题
@@ -23,15 +23,14 @@ def save(url):
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36'}
     def title():
-        try:
-            html = requests.get(url,headers=headers).text.encode('ISO-8859-1')#服务器返回数据默认编码为：ISO-8859-1
-        except:
-            html = requests.get(url, headers=headers).text
-        page = etree.HTML(html)
-        try:
-            #如果下载的网址是网页，则取页面<head>中的标题为谁的名，否则，取url中的后缀为文件名
+        if re.findall('\.(\w*)?',url)[-1] not in ['doc','docx','xls','xlsx','pdf','rar','ppt','pptx']:
+            try:
+                html = requests.get(url,headers=headers).text.encode('ISO-8859-1')#服务器返回数据默认编码为：ISO-8859-1
+            except:
+                html = requests.get(url, headers=headers).text
+            page = etree.HTML(html)
             title=page.xpath('/html/head/title/text()')[0]
-        except:
+        else:
             title=os.path.basename(url)
         return title
 
@@ -57,18 +56,14 @@ def save(url):
         print('SAVED:',curr_dir)
         # 下载数据
         r = requests.get(url,headers=headers)
-        print('SIZE:',len(r.content))
+        # print('SIZE:',len(r.content))
         with open(file, "wb") as f:
             f.write(r.content)
 
     download()
 
 if __name__=='__main__':
-    urls=['http://www.gelonghui.com/p/84066.html',
-        'http://finance.caixin.com/2016-08-24/100981248.html',
-        'http://wallstreetcn.com/node/259499',
-        'https://xueqiu.com/today/all',
-        'https://www.zhihu.com/question/27434092',
+    urls=['http://pmi.caixin.com/2016-08-24/100981097.html',
         'http://www.cfachina.org/CXFW/zgsyw/ywgzzgs/201512/P020160104519469842030.doc',
         'http://www.cfachina.org/CXFW/zgsyw/ywgzzgs/201512/P020160104519470578820.xls'
     ]
