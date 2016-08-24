@@ -12,7 +12,7 @@ import requests
 from lxml import etree
 
 #要下载的网页链接
-url = 'http://news.sina.com.cn/c/gat/2016-08-24/doc-ifxvcsrm2343861.shtml'
+url = 'http://bbs.tianya.cn/post-develop-2168806-1.shtml'
 headers={'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36'}
 html = requests.get(url,headers=headers).text
 page = etree.HTML(html)
