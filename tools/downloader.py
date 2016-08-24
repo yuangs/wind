@@ -6,36 +6,75 @@ Created on Thu Aug 11 14:11:01 2016
 利用requests库下载各种文件
 @author: gsyuan
 """
-import os
-import re
+import os,sys,re
 import requests
 from lxml import etree
+#测试下载链接，要下载的网页链接，获取网页标题
+#格隆汇 http://www.gelonghui.com/p/84066.html
+# 财新网 http://finance.caixin.com/2016-08-24/100981248.html
+# 华尔街见闻 http://wallstreetcn.com/node/259499
+# 雪球 https://xueqiu.com/today/all
+# 知乎 https://www.zhihu.com/question/27434092
+# 中期协 http://www.cfachina.org/CXFW/zgsyw/ywgzzgs/201512/P020160104519469842030.doc
+# http://www.cfachina.org/CXFW/zgsyw/ywgzzgs/201512/P020160104519470578820.xls
+def save(url):
+    url = url
+    curr_dir = os.getcwd()
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36'}
+    def title():
+        try:
+            html = requests.get(url,headers=headers).text.encode('ISO-8859-1')#服务器返回数据默认编码为：ISO-8859-1
+        except:
+            html = requests.get(url, headers=headers).text
+        page = etree.HTML(html)
+        try:
+            #如果下载的网址是网页，则取页面<head>中的标题为谁的名，否则，取url中的后缀为文件名
+            title=page.xpath('/html/head/title/text()')[0]
+        except:
+            title=os.path.basename(url)
+        return title
 
-#要下载的网页链接
-url = 'http://bbs.tianya.cn/post-develop-2168806-1.shtml'
-headers={'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36'}
-html = requests.get(url,headers=headers).text
-page = etree.HTML(html)
-title=page.xpath('/html/head/title/text()')[0]
-print(title)
+    title=title()
 
-def download(url):
-  '下载文件，文件名为url得出'
-  #从URL中解析出文件名
-  curr_dir = os.getcwd()
-  file=title
+    def file_name():
+        '获得文件名'
+        # 以网页形式保存文件
+        if isinstance(url[-1], int):
+            file = title + '.html'
+        elif 'html' in url[-4]:
+            file = title + '.html'
+        else:
+            file = title
+        return file
 
-  print('FILE:',file)
-  print('USE: requests')
-  print('FROM:',url)
-  print('SAVED:',curr_dir)
+    file=file_name()
 
-  #下载数据
-  r = requests.get(url,headers=headers)
-  print('SIZE:',len(r.content))
-  with open(file, "wb") as f:
-       f.write(r.content)
+    def download():
+        print('FILE:',file)
+        print('USE: requests')
+        print('FROM:',url)
+        print('SAVED:',curr_dir)
+        # 下载数据
+        r = requests.get(url,headers=headers)
+        print('SIZE:',len(r.content))
+        with open(file, "wb") as f:
+            f.write(r.content)
+
+    download()
 
 if __name__=='__main__':
-    download(url)
+    urls=['http://www.gelonghui.com/p/84066.html',
+        'http://finance.caixin.com/2016-08-24/100981248.html',
+        'http://wallstreetcn.com/node/259499',
+        'https://xueqiu.com/today/all',
+        'https://www.zhihu.com/question/27434092',
+        'http://www.cfachina.org/CXFW/zgsyw/ywgzzgs/201512/P020160104519469842030.doc',
+        'http://www.cfachina.org/CXFW/zgsyw/ywgzzgs/201512/P020160104519470578820.xls'
+    ]
+    for url in urls:
+        try:
+            save(url)
+        except:
+            pass
 
