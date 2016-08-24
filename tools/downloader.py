@@ -9,19 +9,22 @@ Created on Thu Aug 11 14:11:01 2016
 import os
 import re
 import requests
+from lxml import etree
 
-url = 'http://www.dce.com.cn/portal/uploadFiles/296.1469674883750.jpg'
-curr_dir=os.getcwd()
+#要下载的网页链接
+url = 'http://news.sina.com.cn/c/gat/2016-08-24/doc-ifxvcsrm2343861.shtml'
+headers={'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36'}
+html = requests.get(url,headers=headers).text
+page = etree.HTML(html)
+title=page.xpath('/html/head/title/text()')[0]
+print(title)
 
 def download(url):
-  '''
-  下载文件
-  '''
+  '下载文件，文件名为url得出'
   #从URL中解析出文件名
-  file=url.split(sep='/')[-2]+'_'+url.split(sep='/')[-1]
-  if not '.' in file:file=file+'.html'
+  curr_dir = os.getcwd()
+  file=title
 
-  headers={'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36'}
   print('FILE:',file)
   print('USE: requests')
   print('FROM:',url)
