@@ -37,11 +37,12 @@ def save(url):
     def file_name():
         '获得文件名'
         # 以网页形式保存文件
-        if os.path.splitext(url)[-1]!="":
-            file = title
+        if isinstance(url[-1], int):
+            file = title + '.html'
+        elif 'html' in url[-4]:
+            file = title + '.html'
         else:
-            file = title+'.html'
-            print(file)
+            file = title
         return file
 
     file=file_name()
@@ -78,9 +79,7 @@ if __name__=='__main__':
                 pass
 
     def test():
-        urls = ['https://xueqiu.com/today/all',
-                'http://wallstreetcn.com/node/259703',
-                'http://finance.caixin.com/2016-08-24/100981248.html',
+        urls = ['http://pmi.caixin.com/2016-08-24/100981097.html',
                 'http://www.cfachina.org/CXFW/zgsyw/ywgzzgs/201512/P020160104519469842030.doc',
                 'http://www.cfachina.org/CXFW/zgsyw/ywgzzgs/201512/P020160104519470578820.xls']
 
@@ -89,7 +88,7 @@ if __name__=='__main__':
                 save(url)
             except:
                 pass
-    test()
+    # test()
     download_htmls()
 
 
