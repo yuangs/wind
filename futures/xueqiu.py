@@ -1,17 +1,19 @@
-import os,re
+import os,re,time
 import requests
 from lxml import etree
-url='https://xueqiu.com/today/all'
+import downloader
+
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) \
-Chrome/51.0.2704.106 Safari/537.36'}
+    Chrome/51.0.2704.106 Safari/537.36'}
+def xueqiu():
+    url='https://xueqiu.com/today/all'
+    r=requests.get(url,headers=headers)
+    selector = etree.HTML(r.content)
+    titles=selector.xpath("//div[@class='list_item_tit']/a/text()")
+    links=selector.xpath("//div[@class='list_item_tit']/a/@href")
 
-r=requests.get(url,headers=headers)
-selector = etree.HTML(r.content)
-titles=selector.xpath("//div[@class='list_item_tit']/a/text()")
-links=selector.xpath("//div[@class='list_item_tit']/a/@href")
-
-# for i in range(len(titles)):
-#     print(titles[i]+'--> https://xueqiu.com'+links[i])
+    for i in range(len(titles)):
+        print(titles[i]+'--> https://xueqiu.com'+links[i])
 
 def qilin():
     for i in range(15):
@@ -23,4 +25,7 @@ def qilin():
             print(titles[j] + '-->' + links[j])
 
 
+
+
+xueqiu()
 qilin()

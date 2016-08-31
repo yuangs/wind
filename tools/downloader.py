@@ -6,7 +6,7 @@ Created on Thu Aug 11 14:11:01 2016
 利用requests库下载各种文件
 @author: gsyuan
 """
-import os,re
+import os,re,time
 import requests
 from lxml import etree
 
@@ -77,6 +77,7 @@ if __name__=='__main__':
                 save(url)
             except:
                 pass
+            time.sleep(1)
 
     def test():
         urls = ['http://pmi.caixin.com/2016-08-24/100981097.html',
