@@ -37,3 +37,6 @@ WINDSECTORINDEX={'OOFI.WI': {'Wind油脂油料':'豆粕,菜粕,豆油,棕榈油,
 'NMBM.WI': {'Wind非金属建材':'玻璃,PVC,胶合板,纤维板'}
 }
 
+headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) \
+    Chrome/51.0.2704.106 Safari/537.36'}
+
