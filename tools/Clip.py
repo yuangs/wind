@@ -1,3 +1,11 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Aug 11 14:11:01 2016
+
+@author: gsyuan
+利用requests库下载各种文件
+@author: gsyuan
+"""
 def getClipboard():
     import win32clipboard as w
     import win32con
