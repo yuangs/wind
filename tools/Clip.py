@@ -26,3 +26,4 @@ def setClipboard(aString):
 
 if __name__=='__main__':
   print(getClipboard())
+  print('over')
