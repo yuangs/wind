@@ -25,7 +25,7 @@ def save(url):
             try:
                 html = requests.get(url,headers=headers).text.encode('ISO-8859-1')#服务器返回数据默认编码为：ISO-8859-1
             except:
-                html = requests.get(url, headers=headers).text
+                html = requests.ge(url, headers=headers).text
             page = etree.HTML(html)
             title=page.xpath('/html/head/title/text()')[0]
         else:

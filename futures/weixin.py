@@ -17,4 +17,5 @@ content=getClipboard()
 urls=re.findall(pattern,content)
 for url in urls:
     print(urls)
+    #can't connect
 
