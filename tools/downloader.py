@@ -23,9 +23,9 @@ def save(url):
     def title():
         if re.findall('\.(\w*)?',url)[-1] not in ['doc','docx','xls','xlsx','pdf','rar','ppt','pptx']:
             try:
-                html = requests.get(url,headers=headers).text.encode('ISO-8859-1')#服务器返回数据默认编码为：ISO-8859-1
+                html = requests.get(url,headers=headers).content.encode('ISO-8859-1')#服务器返回数据默认编码为：ISO-8859-1
             except:
-                html = requests.ge(url, headers=headers).text
+                html = requests.get(url, headers=headers).content
             page = etree.HTML(html)
             title=page.xpath('/html/head/title/text()')[0]
         else:
@@ -60,6 +60,18 @@ def save(url):
 
     download()
 
+
+def download_htmls():
+    #获取网址列表，并保存一个txt文件中，然后下载此表中的网页并保存
+    python = open(r"C:\Users\gsyuan\Desktop\url.txt", 'r').readlines()
+    python = [item.strip() for item in python]
+    for url in python:
+        try:
+            save(url)
+        except:
+            pass
+        time.sleep(10)
+
 if __name__=='__main__':
     # 测试下载链接，要下载的网页链接，获取网页标题
     # 格隆汇 http://www.gelonghui.com/p/84066.html
@@ -69,16 +81,6 @@ if __name__=='__main__':
     # 知乎 https://www.zhihu.com/question/27434092
     # 中期协 http://www.cfachina.org/CXFW/zgsyw/ywgzzgs/201512/P020160104519469842030.doc
     # http://www.cfachina.org/CXFW/zgsyw/ywgzzgs/201512/P020160104519470578820.xls
-    def download_htmls():
-        python=open(r"C:\Users\gsyuan\Desktop\url.txt",'r').readlines()
-        python = [item.strip() for item in python]
-        for url in python:
-            try:
-                save(url)
-            except:
-                pass
-            time.sleep(1)
-
     def test():
         urls = ['http://pmi.caixin.com/2016-08-24/100981097.html',
                 'http://www.cfachina.org/CXFW/zgsyw/ywgzzgs/201512/P020160104519469842030.doc',

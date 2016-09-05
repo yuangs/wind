@@ -1,5 +1,4 @@
 
-import downloader
 import time
 import requests
 import re
@@ -12,10 +11,21 @@ def getClipboard():
     w.CloseClipboard()
     return data
 
-pattern='<h4 class="msg_title" hrefs="(.*?)">'
-content=getClipboard()
-urls=re.findall(pattern,content)
-for url in urls:
-    print(urls)
-    #can't connect
+def article_urls():
+    #将微信公众号电脑页面复制到剪贴板，并获取urls,保存至文件
+    content=getClipboard()
+    pattern='<h4 class="msg_title" hrefs="(.*?)">'
+    if re.search(pattern,content):
+        urls=re.findall(pattern,content)
+    else:
+        pattern='<h4 class="msg_desc" hrefs="(.*?)">'
+        urls = re.findall(pattern, content)
+
+    with open(r"C:\Users\gsyuan\Desktop\url.txt",'w') as f:
+        for url in urls:
+            url=re.sub('&amp;','&',url)
+            f.write(url+'\n')
+
+if __name__ == '__main__':
+    article_urls()
 
