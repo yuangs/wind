@@ -114,6 +114,23 @@ def getwindsec():
   temp['close']=temp['收盘价(元)']
   df=temp.loc[:,['date','close']]
   return df
+  
+def calculate_volatility(days=60):
+  '将行情数据复制至剪切板后，计算给定天数的波动率'
+  days=days
+  data=pd.read_clipboard()
+  b=data['收盘价(元)']
+  data['log_return']=log(b/b.shift(1))
+  sigma=data['log_return'][-(days):].describe()['std']*260**0.5
+  return sigma
+
+
+sig5=calculate_volatility(5)
+sig20=calculate_volatility(20)
+sig30=calculate_volatility(30)
+sig60=calculate_volatility(60)
+print(sig5,sig20,sig30,sig60)
+
 
 
 
