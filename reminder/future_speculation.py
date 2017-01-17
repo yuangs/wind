@@ -12,7 +12,7 @@ from WindPy import *
 w.start()  #
 #计算所有期货品种的投机度，并绘制出图表方便观察各品种的热门程度
 def hot():
-  date='20160421'
+  date='20161021'
   #获取上述默认日期所有期货品种的成交量及持仓量的数据
   field="A.DCE,AG.SHF,AL.SHF,AU.SHF,B.DCE,BB.DCE,BU.SHF,C.DCE,CF.CZC,CS.DCE,CU.SHF,FB.DCE,FG.CZC,FU.SHF,HC.SHF,I.DCE,J.DCE,JD.DCE,JM.DCE,JR.CZC,L.DCE,LR.CZC,M.DCE,MA.CZC,NI.SHF,OI.CZC,P.DCE,PB.SHF,PM.CZC,PP.DCE,RB.SHF,RI.CZC,RM.CZC,RS.CZC,RU.SHF,SF.CZC,SM.CZC,SN.SHF,SR.CZC,TA.CZC,TC.CZC,V.DCE,WH.CZC,Y.DCE,ZC.CZC,ZN.SHF,WR.SHF,AG(T+D).SGE,AU(T+D).SGE"
   index="oi,volume"

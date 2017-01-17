@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from datetime import datetime
 from WindPy import *
-from pywind.tools import downloader
+from wind.tools import downloader
 
 w.start()
 def oi(startdate='2012-7-29',enddate='2013-7-29',varity='rb.shf',wind_code='all',member_name='all',order_by='long'):

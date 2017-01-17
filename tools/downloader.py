@@ -70,7 +70,7 @@ def download_htmls():
             save(url)
         except:
             pass
-        time.sleep(10)
+        time.sleep(8)
 
 if __name__=='__main__':
     # 测试下载链接，要下载的网页链接，获取网页标题
