@@ -5,14 +5,13 @@ Created on Mon Aug  1 13:33:01 2016
 @author: gsyuan
 """
 import pandas as pd
-import re
 
 
 def shfe_oi(code='cu', date=20060106):
     '''
     获取上期所某个合约某一交易日的持仓信息，解析为pandas dataframe
     上期所通过单一文件提供每日持仓龙虎榜数据的展示，通过解析json文件为字典，
-    最后转化为pandas dateframe
+    最后转化为pandas dataframe
 
     para:
     code:字符串，如'cu1705'
