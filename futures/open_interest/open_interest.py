@@ -5,7 +5,6 @@ Created on Mon Aug  1 13:33:01 2016
 @author: gsyuan
 """
 import pandas as pd
-import re
 
 
 def shfe_oi(code='cu', date=20060106):
