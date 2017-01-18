@@ -97,3 +97,31 @@ memberDealPosiQuotes.variety=%s&memberDealPosiQuotes.trade_type=0&year=%s&month=
 
 # 函数调用,
 dce_oi('a', 20170117)
+
+
+def czc(code='cf705', date=20170117):
+    '''
+       获取郑商所某个合约某一交易日的持仓信息，解析为pandas dataframe
+       para:
+       code:字符串，如'cf705'或‘cf’
+       date:八位日期格式，如20170117
+       '''
+    code = code.upper()
+    date = str(date)
+    url = 'http://www.czce.com.cn/portal/DFSStaticFiles/Future/%s/%s/FutureDataHolding.htm' % (date[:4], date)
+    data = pd.read_html(url, encoding='gb2312')[1].fillna(method='bfill')
+    s = data[0]
+    for i in range(len(s)):
+        if '日期' in s[i]:
+            s[i] = re.findall('[A-Z]{2,3}\d*', s[i])[0]
+        elif '名次' in s[i]:
+            s[i] = s[i - 1]
+        else:
+            s[i] = s[i - 1]
+    data['日期'] = date
+    data.set_index('日期', inplace=True)
+    df = data.drop_duplicates()
+    return df[df[0] == code]
+
+
+czc()
