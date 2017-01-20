@@ -4,10 +4,30 @@ Created on Mon Aug  1 13:33:01 2016
 
 @author: gsyuan
 """
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Aug  1 13:33:01 2016
+
+@author: gsyuan
+"""
 import pandas as pd
+import numpy as np
+import re
 
 
-def shfe_oi(code='cu', date=20060106):
+def statistics(result):
+    total = result.apply(np.sum)
+    total.Name_1 = total.Name_2 = total.Name_3 = '总计'
+    total.Code = ''
+    total.Rank = ''
+
+    statistics = total.tolist()
+    result = result.append(pd.DataFrame(statistics, index=result.columns).T)
+    result = result.apply(lambda x: pd.to_numeric(x, errors='ignore')).copy()
+    return result
+
+
+def shf_contract(code='cu', date=20170119):
     '''
     获取上期所某个合约某一交易日的持仓信息，解析为pandas dataframe
     上期所通过单一文件提供每日持仓龙虎榜数据的展示，通过解析json文件为字典，
@@ -47,18 +67,63 @@ def shfe_oi(code='cu', date=20060106):
     result.set_index('date', inplace=True)
     '将可以转化为数字的列转换为数值类型'
     result = result.apply(lambda x: pd.to_numeric(x, errors='ignore')).copy()
+    result = result[result.Code.str.contains(code)]
+    selector = result['Rank'].apply(lambda x: x in list(range(1, 21)))
+    result = result[selector]
 
-    return result[result.Code.str.contains(code)]
+    return statistics(result)
 
 
 # 函数调用,
-shfe_oi('rb1705', 20170117)
-# 品种成交、多头，空头龙虎榜前二十名
-# shfe_oi('cu',20170117).groupby('Name_1')['Volume','Vol_chg'].sum().sort_values('Volume',ascending=False).head(22)
-# shfe_oi('cu',20170117).groupby('Name_2')['Long','Long_chg'].sum().sort_values('Long',ascending=False).head(22)
-# shfe_oi('cu',20170117).groupby('Name_3')['Short' ,'Short_chg' ].sum().sort_values('Short',ascending=False).head(22)
+# shfe_contract('rb',20170119)
+# shfe_contract('rb',20170119)
 
-def dce_oi(code='i1705', date=20170117):
+# 品种成交、多头，空头龙虎榜前二十名
+def shf_variety(code='cu', date=20170119):
+    '由于交易所不公布品种总持仓的排名情况，需求按各个合约汇总计算得出品种持仓龙虎榜数据'
+
+    data = shf_contract(code, date)
+    # 筛选出期公司的持仓记录，不包括统计记录，如期货公司，非期货公司，前二十名持仓汇总数据等。
+    selector = data['Rank'].apply(lambda x: x in list(range(1, 21)))
+    data = data[selector]
+    # 按期货公司统计成交量加总，之后排序取前二十名
+    df1 = pd.DataFrame(data.groupby('Name_1')['Name_1', 'Volume', 'Vol_chg'].sum() \
+                       .sort_values('Volume', ascending=False).head(20))
+    df2 = pd.DataFrame(data.groupby('Name_2')['Name_2', 'Long', 'Long_chg'].sum() \
+                       .sort_values('Long', ascending=False).head(20))
+    df3 = pd.DataFrame(data.groupby('Name_3')['Short', 'Short_chg'].sum() \
+                       .sort_values('Short', ascending=False).head(20))
+
+    # 重新索引以方便后续join操作
+    df1.reset_index('rank', inplace=True)
+    df2.reset_index('rank', inplace=True)
+    df3.reset_index('rank', inplace=True)
+    # 最终品种持仓龙虎榜
+    df = df1.join(df2).join(df3)
+    df['date'] = date
+    df['Code'] = code
+    df.set_index('date', inplace=True)
+    columns = ['Code', 'Name_1', 'Volume', 'Vol_chg', 'Name_2', 'Long', 'Long_chg', 'Name_3',
+               'Short', 'Short_chg']
+    result = df.loc[:, columns]
+    # 计算品种持仓的前十名统计数据
+    return statistics(result)
+
+
+def shf_oi(code='cu', date=20170119):
+    '根据用户输入的参数选择提取品种或合约龙虎榜数据'
+    if len(code) <= 2:
+        return shf_variety(code, date)
+    else:
+        return shf_contract(code, date)
+
+
+# 函数调用
+oi_rank = shf_oi('cu1703', 20170119)
+oi_rank
+
+
+def dce_oi(code='i1705', date=20170119):
     '''
     获取大商所某个合约某一交易日的持仓信息，解析为pandas dataframe。
 
@@ -87,24 +152,18 @@ memberDealPosiQuotes.variety=%s&memberDealPosiQuotes.trade_type=0&year=%s&month=
     result['code'] = code
     result.set_index('date', inplace=True)
     result.columns = ['Rank', 'Name_1', 'volume', 'Vol_chg', 'rank_2', 'Name_2', 'Long', 'Long_chg', \
-                      'rank_3', 'Name_3', 'Short', 'Short_chg', 'Code']
+ 'rank_3', 'Name_3', 'Short', 'Short_chg', 'Code']
     result = result.loc[:, ['Code', 'Rank', 'Name_1', 'volume', 'Vol_chg', 'Name_2', 'Long', 'Long_chg', \
-                            'Name_3', 'Short', 'Short_chg']]
+'Name_3', 'Short', 'Short_chg']]
 
-    return result
+    return statistics(result.head(20))
 
 
 # 函数调用,
-dce_oi('a', 20170117)
+dce_oi('i', 20170119)
+# dce_oi('i1705',20170119)
 
-
-def czc(code='cf705', date=20170117):
-    '''
-       获取郑商所某个合约某一交易日的持仓信息，解析为pandas dataframe
-       para:
-       code:字符串，如'cf705'或‘cf’
-       date:八位日期格式，如20170117
-       '''
+def czc(code='cf', date=20170117):
     code = code.upper()
     date = str(date)
     url = 'http://www.czce.com.cn/portal/DFSStaticFiles/Future/%s/%s/FutureDataHolding.htm' % (date[:4], date)
@@ -120,7 +179,17 @@ def czc(code='cf705', date=20170117):
     data['日期'] = date
     data.set_index('日期', inplace=True)
     df = data.drop_duplicates()
-    return df[df[0] == code]
+    df.columns = ['Code', 'Name_1', 'volume', 'Vol_chg', 'Name_2', 'Long', 'Long_chg', \
+                  'Name_3', 'Short', 'Short_chg']
+    df = df.loc[:, ['Code', 'Rank', 'Name_1', 'volume', 'Vol_chg', 'Name_2', 'Long', 'Long_chg', \
+                    'Name_3', 'Short', 'Short_chg']]
+    result = df[df['Code'] == code][1:-1]
+    result['Rank'] = list(range(1, 21))
+    result = result.apply(lambda x: pd.to_numeric(x, errors='ignore')).copy()
 
+    return statistics(result)
 
-czc()
+#函数调用
+# czc('cf',20170119)
+czc('cf705', 20170119)
+
