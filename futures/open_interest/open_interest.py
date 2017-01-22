@@ -13,6 +13,8 @@ Created on Mon Aug  1 13:33:01 2016
 import pandas as pd
 import numpy as np
 import re
+import requests
+% matplotlib inline
 
 
 def statistics(result):
@@ -247,4 +249,36 @@ def oi_99qh(code='rb', date=20170119, contract='ALL'):
 
 
 oi_99qh('rb', 20170120, 'rb1710')
+
+
+def plot():
+    def lsratio(code='rb', date=20170119, contract='ALL'):
+        '计算前二十名多空比率'
+
+    try:
+        data = oi_99qh(code, 20170120)
+        ratio = round(int(data.loc[24, 'l']) / int(data.loc[24, 's']), 2)
+        return ratio
+    except:
+        pass
+
+
+def plot_data():
+    '报价总是取最新交易时间'
+    url = 'http://webftcn.hermes.hexun.com/shf/sortlist?block=741&number=100&title=14&commodityid=0&direction=0&start=0&column=code,name,price,updown,buyPrice,buyVolume,sellPrice,sellVolume,volume,lastClose,open,high,low,openInterest,addPosition,amount,vibrationRatio,priceWeight,dateTime&callback=hx_json11485071465878'
+    r = requests.get(url)
+    json = re.findall(r'\["(.*?)",".*?",(\d+),(\d+)', r.text)
+    data = pd.DataFrame(json)
+    data.columns = ['code', 'price', 'chg']
+    data['code2'] = data.code.str.extract('([A-Z]+)')
+    data = data.apply(lambda x: pd.to_numeric(x, errors='ignore')).copy()
+    data['chg'] = data.chg / data.price
+    data['ratio'] = data.code2.apply(lambda x: lsratio(x.lower()))
+    df = data.dropna().copy()
+    return df
+
+
+df = plot_data()
+df.plot(kind='scatter', x='chg', y='ratio')
+
 
