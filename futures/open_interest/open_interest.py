@@ -193,3 +193,58 @@ def czc(code='cf', date=20170117):
 # czc('cf',20170119)
 czc('cf705', 20170119)
 
+
+def oi_99qh(code='rb', date=20170119, contract='ALL'):
+    '99期货持仓数据接口'
+    code2num = {'a': 78,
+                'ag': 58,
+                'al': 91,
+                'au': 7,
+                'bb': 79,
+                'bu': 85,
+                'c': 11,
+                'cf': 23,
+                'cs': 82,
+                'cu': 89,
+                'fb': 75,
+                'fg': 70,
+                'hc': 64,
+                'i': 61,
+                'j': 56,
+                'jd': 65,
+                'jm': 57,
+                'l': 16,
+                'ma': 94,
+                'ni': 69,
+                'p': 24,
+                'pb': 54,
+                'pp': 80,
+                'rb': 8,
+                'rm': 72,
+                'rs': 71,
+                'ru': 98,
+                'sm': 74,
+                'sr': 51,
+                'ta': 53,
+                'v': 52,
+                'y': 12,
+                'zn': 6}
+    codenum = code2num[code]
+    date = str(date)
+    year = date[:4]
+    month = date[4:6]
+    day = date[6:8]
+    url = 'http://service.99qh.com/hold2/MemberHold/GetTableHtml.aspx?date=%s-%s-%s&user=99qh&goods=%s&agreement=%s&count=20' % (
+    year, month, day, codenum, contract)
+    f = pd.read_html(url, encoding='utf-8')
+
+    df = f[0][4:]
+    df.columns = ['rank1', 'name', 'vol', 'vol_chg', 'rank2', 'name2', 'l', 'l_chg', 'rank3', 'name3', 's', 's_chg']
+    df.to_clipboard()
+    print('时间：%s  品种：%s  合约：%s 持仓情况' % (date, code, contract))
+    print('数据来源：', url)
+    return df
+
+
+oi_99qh('rb', 20170120, 'rb1710')
+
