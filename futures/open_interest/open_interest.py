@@ -14,7 +14,7 @@ import pandas as pd
 import numpy as np
 import re
 import requests
-% matplotlib inline
+%matplotlib inline
 
 
 def statistics(result):
@@ -255,12 +255,12 @@ def plot():
     def lsratio(code='rb', date=20170119, contract='ALL'):
         '计算前二十名多空比率'
 
-    try:
-        data = oi_99qh(code, 20170120)
-        ratio = round(int(data.loc[24, 'l']) / int(data.loc[24, 's']), 2)
-        return ratio
-    except:
-        pass
+        try:
+            data = oi_99qh(code, 20170120)
+            ratio = round(int(data.loc[24, 'l']) / int(data.loc[24, 's']), 2)
+            return ratio
+        except:
+            pass
 
 
     def plot_data():
@@ -278,7 +278,7 @@ def plot():
         return df
 
 
-df = plot_data()
-df.plot(kind='scatter', x='chg', y='ratio')
+    df = plot()
+    df.plot(kind='scatter', x='chg', y='ratio')
 
 
