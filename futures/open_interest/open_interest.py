@@ -14,7 +14,7 @@ import pandas as pd
 import numpy as np
 import re
 import requests
-%matplotlib inline
+#% matplotlib inlineS
 
 
 def statistics(result):
