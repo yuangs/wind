@@ -250,6 +250,28 @@ def oi_99qh(code='rb', date=20170119, contract='ALL'):
 
 oi_99qh('rb', 20170120, 'rb1710')
 
+def sina_oi(code='rb1705',date=20170123):
+    '新浪机构持仓数据接口'
+    date=str(date)
+    date='%s-%s-%s'%(date[:4],date[4:6],date[6:])
+    url='http://vip.stock.finance.sina.com.cn/q/view/vFutures_Positions_cjcc.php?t_breed=%s&t_date=%s'%(code,date)
+    df=pd.read_html(url)
+    vol=df[2][1:]
+    vol.columns=['rank','name','vol','chg']
+    long=df[3][1:]
+    long.columns=['rank','name','long','chg']
+    short=df[4][1:]
+    short.columns=['rank','name','short','chg']
+    data=pd.merge(pd.merge(vol,long,on='rank'),short,on='rank')
+    data=data.apply(lambda x: pd.to_numeric(x,errors='ignore')).copy()[:-1]
+    data.index=data['rank']
+    del data['rank']
+    return data
+
+
+sina_oi()
+
+
 
 def plot():
     def lsratio(code='rb', date=20170119, contract='ALL'):

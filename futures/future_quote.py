@@ -4,6 +4,20 @@ import re
 import json
 import requests
 
+def future_quote_sina():
+    '获取新浪期货全部合约即时行情数据'
+    r=requests.get('http://money.finance.sina.com.cn/d/api/openapi_proxy.php/?__s=[[%22qhhq%22,%22qbhy%22,%22zdf%22,1000]]')
+    data=r.text
+    data = json.loads(data)
+    d=data[0]
+    df=pd.DataFrame(d['items'],columns=d['fields'])
+    df.head()
+    df.index=df.name
+    #交易所主力合约：df[(df.market=='dce')& (df.is_hot=='1')]
+    #全部主力合约：df[(df.market=='dce')& (df.is_hot=='1')]
+    #交易所合约：df[(df.market=='dce')]
+    return df
+future_quote_sina()
 
 def future_quote_sina(code='by'):
     r=requests.get('http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/Market_Center.getHQFuturesData?\
