@@ -39,10 +39,23 @@ def future_quote_sina(exchange='all', flag=1):
             # 指定交易所全部合约
             return df[df.market == exchange].sort_values('volume', ascending=False)
 
+def future_overseas_sina():
+    '获取新浪期货外盘期货的即时行情数据'
+    r = requests.get('http://vip.stock.finance.sina.com.cn/d/api/openapi_proxy.php/?__s=[[%22wpqh%22,%22spqh%22]]')
+    data = r.text
+    data = json.loads(data)[0]
+    df=pd.DataFrame(data['items'],columns=data['fields'])
+    df.index=df.symbol
+    columns=['name','dateupdate','timeupdate', 'last', 'changeamount', 'pricechange','totalvol',\
+         'bid', 'ask','prev', 'open', 'high', 'low']
+    data=df.loc[:,columns]
+    return data
 
 
 def main():
-    print(future_quote_sina('all', 0))
+    future_quote_sina('all', 1)
+    future_overseas_sina()
+
 
 if __name__=='__main__':
     main()
