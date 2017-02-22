@@ -52,11 +52,12 @@ def future_overseas_sina():
     return data
 
 
-def main():
-    future_quote_sina('all', 1)
-    future_overseas_sina()
-
-
 if __name__=='__main__':
-    main()
-
+    import time
+    for i in range(1,5):
+        a=future_quote_sina('all', 2)
+        print(a)
+        a.to_clipboard()
+        print('第'+str(i)+'次提取数据完毕!!!!')
+        time.sleep(10)
+    

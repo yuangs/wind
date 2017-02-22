@@ -5,7 +5,7 @@ Created on Mon Aug  1 13:33:01 2016
 @author: gsyuan
 """
 # -*- coding: utf-8 -*-
-"""
+"""`
 Created on Mon Aug  1 13:33:01 2016
 
 @author: gsyuan
@@ -193,7 +193,7 @@ def czc(code='cf', date=20170117):
 
 #函数调用
 # czc('cf',20170119)
-czc('cf705', 20170119)
+#czc('cf705', 20170119)
 
 
 def oi_99qh(code='rb', date=20170119, contract='ALL'):
@@ -248,7 +248,7 @@ def oi_99qh(code='rb', date=20170119, contract='ALL'):
     return df
 
 
-oi_99qh('rb', 20170120, 'rb1710')
+print(oi_99qh('rb', 20170120, 'rb1710'))
 
 def sina_oi(code='rb1705',date=20170123):
     '新浪机构持仓数据接口'
@@ -269,7 +269,7 @@ def sina_oi(code='rb1705',date=20170123):
     return data
 
 
-sina_oi()
+print(sina_oi())
 
 
 
@@ -298,9 +298,9 @@ def plot():
         data['ratio'] = data.code2.apply(lambda x: lsratio(x.lower()))
         df = data.dropna().copy()
         return df
+df = plot()
+df.plot(kind='scatter', x='chg', y='ratio')
 
 
-    df = plot()
-    df.plot(kind='scatter', x='chg', y='ratio')
 
 
