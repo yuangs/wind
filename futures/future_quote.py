@@ -54,10 +54,10 @@ def future_overseas_sina():
 
 if __name__=='__main__':
     import time
-    for i in range(1,5):
-        a=future_quote_sina('all', 2)
-        print(a)
-        a.to_clipboard()
-        print('第'+str(i)+'次提取数据完毕!!!!')
-        time.sleep(10)
+    while True:
+        a=future_quote_sina('all', 1)
+        print(a.loc['铁矿石1705',['name', 'trade','volume', 'position']])
+        #print(a.columns)
+        print('小猪猪，数据提取完毕!!!!')
+        time.sleep(1)
     
