@@ -43,9 +43,20 @@ def future_quote_sina(exchange='all', flag=1):
         else:
             # 指定交易所全部合约
             return df[df.market == exchange].sort_values('volume', ascending=False)
+
+
+def shfe_price(date='20170103'):
+    '#获取上期所每日行情数据'
+    url='http://www.shfe.com.cn/data/dailydata/kx/kx%s.dat'%date
+    json_str=requests.get(url).text
+    data=json.loads(json_str)['o_curinstrument']
+    df=pd.DataFrame(data)
+    df['date']=date
+    return df
         
-#从上期所网站批量下载日成交数据后存入数据库
+
 def price_to_sql(start='20170523'):
+    '从上期所网站批量下载日成交数据后存入数据库'
     import sqlite3
     con=sqlite3.connect(r'd:\aliyun\www\my_flask\marketPrice\FutureMarketPrice.db')
     df=shfe_price(start)
