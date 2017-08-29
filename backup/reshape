@@ -1,0 +1,13 @@
+# -*- coding: utf-8 -*-
+"""
+Spyder Editor
+
+This is a temporary script file.
+"""
+
+import pandas as pd
+df=pd.read_clipboard()
+df.index = pd.to_datetime(df.index)
+df.index=df.index
+ratio=df.gold/df.silver
+ratio.resample('M').ohlc().head(10).plot(kind='ohlc')
