@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
-'下载万得研究报告'
+'先将报告网址通过fiddle下载到桌面文件中，然后遍历文件，下载万得研究报告'
 import re
 import requests
 from urllib import parse
 
-'下载万得研究报告'
 
 files=open(r"C:\Users\Administrator\Desktop\report.txt",encoding='utf-8').readlines()
 def download_report(url,title,doctype):
