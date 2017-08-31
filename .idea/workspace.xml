@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="fc5624ad-bdf9-4b1a-9644-34d01671e0c0" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/tonglian.py" afterPath="$PROJECT_DIR$/database/tonglian.py" />
     </list>
     <ignored path="wind.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -507,7 +507,14 @@
       <option name="project" value="LOCAL" />
       <updated>1504000613964</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="增加通联数据接口">
+      <created>1504162182280</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1504162182280</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -582,7 +589,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="no change" />
     <MESSAGE value="test i1705" />
-    <option name="LAST_COMMIT_MESSAGE" value="test i1705" />
+    <MESSAGE value="增加通联数据接口" />
+    <option name="LAST_COMMIT_MESSAGE" value="增加通联数据接口" />
     <option name="UPDATE_GROUP_BY_PACKAGES" value="true" />
   </component>
   <component name="XDebuggerManager">
