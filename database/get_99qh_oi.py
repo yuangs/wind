@@ -1,8 +1,8 @@
 import pandas as pd
 import requests
-import matplotlib.pyplot as plt  
 import re
-# %matplotlib inline
+import string
+import time
 
 dict_99={'99qh品种代码': {'AP': 100,
   'CF': 23,
@@ -94,22 +94,30 @@ def get_position_contract(date="2018-07-10",goods='cu'):
     code_99qh=dict_99['99qh品种代码'][goods]
     url='http://service.99qh.com/hold2/MemberHold/GetAgreementInfo.aspx?date=%s&goodsid=%s'%(date,code_99qh)
     df=requests.get(url)
+    time.sleep(0.25)
 #     print(url)
     return re.findall('<AgreementCode>(.*?)</AgreementCode>',df.text)
 
+
+#获取某一日期所有有公布持仓的合约列表
+def get_all_contracts(date):
+    contracts=[]
+    for commodity in var_list:
+        contracts+=get_position_contract(date,commodity)
+#         print(str(commodity)+str(contracts))
+    return contracts
 
 def get_oi(date="2018-07-10",goods=6,contract='cu1809',count=20):
     url=r'http://service.99qh.com/hold2/MemberHold/GetTableHtml.aspx?\
 date=%s&user=99qh&goods=%s&agreement=%s&count=%s'%(date,goods,contract,count)
 #     print(url)
     df=pd.read_html(url)
-    data=pd.concat([df[0],df[2],df[3]]).iloc[2:,]
-#     print(data)
-    return data
+#      print(data)
+    return df
     
 
-def getData(df=data):
-    df=data[0][2:]
+def getData(data):
+    df=data[0].iloc[2:,]
     df['v']=df.iloc[1,2]
     df['l']=df.iloc[1,6]
     df['s']=df.iloc[1,10]
@@ -148,24 +156,26 @@ def getData(df=data):
     sc=pd.DataFrame(c.loc[:,[8,9,10,11,'s','sr']])
     vc.columns=lc.columns=sc.columns=['Rank','Member','Value','Change','Index','Rank_type']
     cc=pd.concat([vc,lc,sc])
-    dd=pd.concat([aa,bb,cc],ignore_index=True)
-    return dd
+    data=pd.concat([aa,bb,cc],ignore_index=True)
+    return data
 
 def get_OIData(date="2018-07-02"):
+    contracts=get_all_contracts(date)
     Data=pd.DataFrame()
-    for i in var_list:
-        contract_list=get_position_contract(date,i)
-        goods=dict_99['99qh品种代码'][i]
-        Dataj=pd.DataFrame()
-        for j in contract_list:
-            data=get_oi(date="2018-07-03",goods=goods,contract=j,count=20)
-            data=getData(data)
-            data['Date']=date
-            data['Commodity']=i
-            data['Contract']=j
-            Dataj=pd.concat([Dataj,data],ignore_index=True)
-        Data=pd.concat([Data,Dataj],ignore_index=True)
-        Data.to_csv('Daily_oi.csv')
+    for contract in contracts:
+        data1=pd.DataFrame()
+        commodity=contract.rstrip(string.digits)
+        goods=dict_99['99qh品种代码'][commodity]
+        data=get_oi(date=date,goods=goods,contract=contract,count=20)
+        data=getData(data)
+        data['Date']=date
+        data['Commodity']=commodity
+        data['Contract']=contract
+        data1=pd.concat([data1,data],ignore_index=True)
+#         Dataj=pd.DataFrame()
+        Data=pd.concat([Data,data1],ignore_index=True)
+        time.sleep(0.1)
+    Data.to_csv('Daily_oi_2.csv')
     return Data
 
 if __name__ == '__main__':
