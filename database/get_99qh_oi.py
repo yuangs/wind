@@ -163,6 +163,7 @@ def get_OIData(date="2018-07-02"):
     contracts=get_all_contracts(date)
     Data=pd.DataFrame()
     for contract in contracts:
+        start=time.time()
         data1=pd.DataFrame()
         commodity=contract.rstrip(string.digits)
         goods=dict_99['99qh品种代码'][commodity]
@@ -175,7 +176,9 @@ def get_OIData(date="2018-07-02"):
 #         Dataj=pd.DataFrame()
         Data=pd.concat([Data,data1],ignore_index=True)
         time.sleep(0.1)
-    Data.to_csv('Daily_oi_2.csv')
+        end=time.time()
+        print("合约%s的数据获取时间为："% contract +str(end-start))
+    Data.to_csv('Daily_oi_%s.csv'% date)
     return Data
 
 if __name__ == '__main__':
